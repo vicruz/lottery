@@ -42,4 +42,17 @@ public class GeneralUtils {
         User user = localUser.getUser();
         return new UserInfo(user.getId().toString(), user.getDisplayName(), user.getEmail(), roles);
     }
+    
+    public static UserInfo buildUserInfo(User user) {
+    	List<String> roles = user.getRoles().stream().map(role -> role.getName()).collect(Collectors.toList());
+        return new UserInfo(user.getId().toString(), user.getDisplayName(), user.getEmail(), roles);
+    }
+    
+    public static List<UserInfo> buildListUserInfo(List<User> lstUser) {
+    	List<UserInfo> lst = new ArrayList<>();
+    	for(User user: lstUser) {
+    		lst.add(buildUserInfo(user));     		
+    	}
+        return lst;
+    }
 }

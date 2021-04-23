@@ -3,6 +3,7 @@ package com.lottery.service;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -16,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import com.lottery.dto.LocalUser;
 import com.lottery.dto.SignUpRequest;
+import com.lottery.dto.UserInfo;
 import com.lottery.enums.SocialProvider;
 import com.lottery.exceptions.OAuth2AuthenticationProcessingException;
 import com.lottery.exceptions.UserAlreadyExistAuthenticationException;
@@ -81,6 +83,7 @@ public class UserServiceImpl implements UserService {
 		return userRepository.findByEmail(email);
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	@Transactional
 	public LocalUser processUserRegistration(String registrationId, Map<String, Object> attributes, OidcIdToken idToken,
@@ -122,5 +125,40 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public Optional<User> findUserById(Long id) {
 		return userRepository.findById(id);
+	}
+
+	@Override
+	public List<UserInfo> getAll() {
+		List<User> lstUser = userRepository.findAll();
+		return GeneralUtils.buildListUserInfo(lstUser);
+	}
+
+	@Override
+	@Transactional
+	public void updateAdminRole(Long id, boolean active) {
+		Optional<User> optional = userRepository.findById(id);
+		if(optional.isEmpty())
+			return;
+		
+		User user = optional.get();
+		Role roleAdmin = roleRepository.findByName(Role.ROLE_ADMIN);
+		
+		Optional<Role> roleAdminInUser = user.getRoles().stream()
+				.filter(roleTmp -> roleTmp.getRoleId() == roleAdmin.getRoleId()).findFirst();
+		
+		if(roleAdminInUser.isEmpty() && active) 
+			user.getRoles().add(roleAdmin);
+		
+		if(!roleAdminInUser.isEmpty() && !active) 
+			user.getRoles().remove(roleAdmin);
+		
+		userRepository.saveAndFlush(user);
+		
+//		if(roleAdminInUser.isEmpty() && !active)
+//			return;
+//		
+//		if(!roleAdminInUser.isEmpty() && !active)
+//			return;
+			
 	}
 }
