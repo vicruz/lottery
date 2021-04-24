@@ -11,7 +11,7 @@ public interface RaffleService {
 	
 	public RaffleDto getOne(Long id);
 	
-	public void save(RaffleDto dto);
+	public RaffleDto save(RaffleDto dto);
 	
 	public void updateNumber(Long raffleId, Long number, String email) throws LotteryException;
 	

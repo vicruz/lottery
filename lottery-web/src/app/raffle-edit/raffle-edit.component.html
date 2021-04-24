@@ -1,0 +1,110 @@
+<div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-header card-header-danger">
+                        <h4 class="card-title">Crear Sorteo</h4>
+                        <p class="card-category">Nuevo sorteo</p>
+                    </div>
+                    <div class="card-body">
+                        <form [formGroup]="raffleForm" (ngSubmit)="onSubmit()" novalidate>
+                            <div class="row">
+                                <div class="col-md-5">
+                                    <span [ngClass]="{ 'has-error': isSubmited && raffleForm.controls['formName'].invalid }">
+                                        <mat-form-field class="example-full-width">
+                                            <input matInput formControlName="formName" placeholder="Sorteo"> 
+                                        </mat-form-field>
+                                    </span>
+                                    <span>
+                                        <div *ngIf="isSubmited && raffleForm.controls['formName'].errors" class="help-block">
+                                            <div *ngIf="raffleForm.controls['formName'].errors.required" class="">Nombre requerido</div>
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="col-md-3">
+                                    <span [ngClass]="{ 'has-error': isSubmited && raffleForm.controls['formDate'].invalid }">
+                                        <mat-form-field class="example-full-width" apperance="fill">
+                                        <mat-label>Fecha de Sorteo</mat-label>
+                                        <input matInput formControlName="formDate" [min]="minDate" [matDatepicker]="picker">
+                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                        <mat-datepicker #picker></mat-datepicker>
+                                        </mat-form-field>
+                                    </span>
+                                    <span>
+                                        <div *ngIf="isSubmited && raffleForm.controls['formDate'].errors" class="help-block">
+                                            <div *ngIf="raffleForm.controls['formDate'].errors.required" class="">Fecha requerida</div>
+                                        </div>
+                                    </span>
+                                </div>
+                                <div class="col-md-4">
+                                    <span [ngClass]="{ 'has-error': isSubmited && raffleForm.controls['formPercentage'].invalid }">
+                                        <mat-form-field class="example-full-width">
+                                        <input matInput formControlName="formPercentage" placeholder="% de Inicio" type="number" min="0" max="100" maxlength="3" style="text-align: right;">
+                                        <span matSuffix>%</span>
+                                        </mat-form-field>
+                                    </span>
+                                    <span>
+                                        <div *ngIf="isSubmited && raffleForm.controls['formPercentage'].errors" class="help-block">
+                                            <div *ngIf="raffleForm.controls['formPercentage'].errors.required" class="">Porcentaje requerido</div>
+                                        </div>
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12 card" style="height:300px; overflow:auto">
+                                    <table class="table">
+                                        <thead class=" text-primary">
+                                            <th>Número</th>
+                                            <th>Monto</th>
+                                            <th>Estatus</th>
+                                        </thead>
+                                        <tbody>
+                                            <tr *ngFor="let data of collection; let idx=index">
+                                                <td>{{data.number}}</td>
+                                                <!-- <td>$ <span inputmode="number" contenteditable="true">{{data.amount}}</span></td> -->
+                                                <td>
+                                                    <mat-form-field >
+                                                        <input matInput type="number" min="0" max="100" maxlength="3" style="text-align: right;" value="{{data.amount}}">
+                                                        <span matPrefix>$</span>
+                                                    </mat-form-field>
+                                                </td>
+                                                <td>{{data.status}}</td>
+                                            </tr>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <button mat-raised-button type="submit" class="btn btn-danger pull-right">Guardar Sorteo</button>
+                            <div class="clearfix"></div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-4">
+                <div class="card card-profile">
+                    <div *ngIf="!files.length" class="rmpm dropzone" appImagednd (files)="filesDropped($event)">
+                        <!-- <input type="file" accept="image/jpg, image/gif, image/bmp" #fileDropRef id="fileDropRef" (change)="filesDropped($event)"/> -->
+                        <span class="material-icons">upload</span>
+                        <h3>Cargar imagen</h3>
+                    </div>
+                    <!--droped image preview-->
+                    <div *ngFor="let file of files">
+                        <img *ngIf="file" [src]="file.url"  height="200px">
+                    </div>
+                    <!-- <label class="label-drop" for="fileDropRef">Buscar imagen</label> -->
+                    <!-- <input type="file" class="label-drop" accept=".gif,.jpg,.jpeg,.png"  (change)="fileDropped($event.target.files)"/> -->
+                    <div class="card-body">
+                        <div class="col-md-12">
+                            <mat-form-field class="example-full-width">
+                               <textarea matInput placeholder="Descripción del Producto" maxlength="200" id="description" name="description" #description></textarea>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  

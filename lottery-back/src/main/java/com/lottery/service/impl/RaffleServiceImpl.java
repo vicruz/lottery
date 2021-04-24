@@ -1,5 +1,6 @@
 package com.lottery.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -51,17 +52,21 @@ public class RaffleServiceImpl implements RaffleService {
 	}
 
 	@Override
-	public void save(RaffleDto dto) {
+	public RaffleDto save(RaffleDto dto) {
 		Raffle raffle = raffleRepository.save(RaffleBuilder.dtoToEntity(dto));
+		dto.setId(raffle.getRaffleId());
 		RaffleNumber rnTmp;
+		List<RaffleNumber> lstRn = new ArrayList<>();
 		
 		for(RaffleNumberDto rnDto: dto.getRaffleNumbers()) {
 			rnTmp = RaffleNumberBuilder.dtoToEntity(rnDto);
 			rnTmp.getId().setRaffleId(raffle.getRaffleId());
-			raffle.getRaffleNumbers().add(rnTmp);
+			lstRn.add(rnTmp);
 		}
 		
-		raffleNumberRepository.saveAll(raffle.getRaffleNumbers());
+		raffleNumberRepository.saveAll(lstRn);
+		
+		return dto;
 	}
 
 	@Override
