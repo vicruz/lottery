@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import { RaffleValues } from 'app/response/raffle-values';
+import { RaffleService } from 'app/_services/raffle.service';
 import * as Chartist from 'chartist';
 
 @Component({
@@ -9,13 +11,15 @@ import * as Chartist from 'chartist';
 })
 export class RafflesComponent implements OnInit {
 
-  constructor(private router: Router) { }
+  listRaffles:RaffleValues[] = [];
+
+  constructor(private router: Router, private raffleService:RaffleService) { }
 
   public createRaffle(){
     this.router.navigate(["raffles/edit"]);
   }
 
-  startAnimationForLineChart(chart){
+  public startAnimationForLineChart(chart){
     let seq: any, delays: any, durations: any;
     seq = 0;
     delays = 80;
@@ -71,8 +75,19 @@ startAnimationForBarChart(chart){
 
     seq2 = 0;
 };
+
 ngOnInit() {
-    /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
+
+  this.raffleService.getAllActive().subscribe((resp:RaffleValues[])=>{
+    this.listRaffles = resp;
+  });
+
+
+
+
+
+
+  /* ----------==========     Daily Sales Chart initialization For Documentation    ==========---------- */
 
     const dataDailySalesChart: any = {
         labels: ['M', 'T', 'W', 'T', 'F', 'S', 'S'],
@@ -151,6 +166,10 @@ ngOnInit() {
 
     //start animation for the Emails Subscription Chart
     this.startAnimationForBarChart(websiteViewsChart);
+}
+
+public editRaffle(raffle:RaffleValues){
+  this.router.navigate(["raffles/edit/"+raffle.id]);
 }
 
 }

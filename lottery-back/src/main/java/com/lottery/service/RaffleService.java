@@ -9,10 +9,16 @@ public interface RaffleService {
 	
 	public List<RaffleDto> getAll();
 	
+	public List<RaffleDto> getAllActive();
+	
+	public List<RaffleDto> getAllPercentage();
+	
 	public RaffleDto getOne(Long id);
 	
 	public RaffleDto save(RaffleDto dto);
 	
 	public void updateNumber(Long raffleId, Long number, String email) throws LotteryException;
+	
+	public RaffleDto getComplete(Long id);
 	
 }

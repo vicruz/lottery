@@ -19,6 +19,49 @@
                 </div>
             </div>
         </div>
+
+        <div class="col-sm-12" style="text-align: center;" *ngIf="!listRaffles.length">
+            Sin sorteos
+        </div>
+        <div class="row" *ngIf="listRaffles.length">
+            <div class="col-md-4" *ngFor="let raff of listRaffles; let idx = index">
+                <div class="card card-chart">
+                    
+                    <div class="card-header" style="align-self: center;" >
+                        <a href="javascript:void(0)" >
+                            <img class="img" src="./assets/img/pngegg.png" height="150px"/>
+                        </a>
+                    </div>
+                    <div class="card-body">
+                        <h4 class="card-title">{{raff.name}}</h4>
+                        <p class="card-category">
+                            <span class="text-success">   {{raff.selledPercentage}}%   </span> 
+                            <span style="text-align: right;">   Inicio: {{raff.date}}  </span> 
+                        </p>
+                        
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            <i class="material-icons">monetization_on</i> Participar
+                        </div>
+                        <div class="stats">
+                            <a (click)="editRaffle(raff)">
+                                <i class="material-icons">create</i> Editar
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+
+
+
+<!-- Esto de abajo no va -->
+
         <div class="row">
             <div class="col-md-4">
                 <div class="card card-chart">

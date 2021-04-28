@@ -38,7 +38,7 @@ public class Raffle implements Serializable{
 	private String raffleName;
 	
 	@Column(name = "RAFFLE_DATE")
-	@Temporal(TemporalType.TIMESTAMP)
+	@Temporal(TemporalType.DATE)
 	private Date raffleDate;
 	
 	@Column(name = "RAFFLE_PERCENTAGE")

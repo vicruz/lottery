@@ -2,7 +2,7 @@ package com.lottery.enums;
 
 public enum RaffleStatus {
 
-	LIBRE("libre"), VENDIDO("vendido"), APARTADO("apartado");
+	LIBRE("Libre"), VENDIDO("Vendido"), APARTADO("Apartado");
 	 
     private String status;
  

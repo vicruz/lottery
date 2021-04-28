@@ -65,5 +65,6 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'raffles',        component: RafflesComponent },
     { path: 'upgrade',        component: UpgradeComponent },
     { path: 'users-panel',    component: UsersPanelComponent },
-    { path: 'raffles/edit',   component: RaffleEditComponent }
+    { path: 'raffles/edit',   component: RaffleEditComponent },
+    { path: 'raffles/edit/:id',   component: RaffleEditComponent }
 ];

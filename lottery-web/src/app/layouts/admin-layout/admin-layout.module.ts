@@ -23,6 +23,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { ImagedndDirective } from 'app/_directives/imagednd.directive';
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -39,7 +40,8 @@ import { ImagedndDirective } from 'app/_directives/imagednd.directive';
     MatDatepickerModule,
 //    MaterialModule,
     MatNativeDateModule,
-    MatTableModule
+    MatTableModule,
+    FlexLayoutModule
   ],
   declarations: [
     DashboardComponent,

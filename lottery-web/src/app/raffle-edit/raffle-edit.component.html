@@ -51,6 +51,22 @@
                                     </span>
                                 </div>
                             </div>
+                            
+
+                            <div fxLayout="row">
+                                <div *ngIf="layoutFree > 0" fxFlex="layoutFree" style="background-color:darkgreen; text-align:center; color:white" >
+                                  Libre
+                                </div>
+                                <div *ngIf="layoutTemp > 0" fxFlex="layoutTemp" style="background-color:deepskyblue; text-align:center; color:white">
+                                  Apartado
+                                </div>
+                                <div *ngIf="layoutPaid > 0" fxFlex="layoutPaid" style="background-color:orangered; text-align:center; color:white">
+                                  Pagado
+                                </div>
+                              </div>
+
+
+
                             <div class="row">
                                 <div class="col-md-12 card" style="height:300px; overflow:auto">
                                     <table class="table">
@@ -98,10 +114,10 @@
                     <div class="card-body">
                         <div class="col-md-12">
                             <mat-form-field class="example-full-width">
-                               <textarea matInput placeholder="Descripción del Producto" maxlength="200" id="description" name="description" #description></textarea>
+                               <textarea matInput placeholder="Descripción del Producto" maxlength="200" id="description" name="description" #description ></textarea>
                             </mat-form-field>
                         </div>
-                    </div>
+                    </div> 
                 </div>
             </div>
         </div>

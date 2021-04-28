@@ -8,4 +8,7 @@ export class RaffleValues {
     image: FormData;
     raffleNumbers: RaffleNumbers[];
     description: string;
+    selledPercentage:number;
+    freePercentage:number;
+    selectedPercentage:number;
 }

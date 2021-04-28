@@ -1,8 +1,10 @@
 package com.lottery.service.impl;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,6 +14,7 @@ import com.lotteru.builders.RaffleBuilder;
 import com.lotteru.builders.RaffleNumberBuilder;
 import com.lottery.dto.RaffleDto;
 import com.lottery.dto.RaffleNumberDto;
+import com.lottery.enums.RaffleStatus;
 import com.lottery.exceptions.LotteryException;
 import com.lottery.model.Raffle;
 import com.lottery.model.RaffleNumber;
@@ -38,6 +41,9 @@ public class RaffleServiceImpl implements RaffleService {
 	@Override
 	public List<RaffleDto> getAll() {
 		List<Raffle> lstRaffle = raffleRepository.findAll();
+		//List<RaffleNumber> lstNumberSelled = raffleNumberRepository.getByRaffleIdAndStatus();
+		
+		
 		return RaffleBuilder.entitiesToDtos(lstRaffle);
 	}
 
@@ -86,6 +92,44 @@ public class RaffleServiceImpl implements RaffleService {
 		RaffleNumber raffleNumber = optional.get();
 		raffleNumber.setUser(user);
 		raffleNumberRepository.saveAndFlush(raffleNumber);	
+	}
+
+	@Override
+	public List<RaffleDto> getAllPercentage() {
+		return raffleRepository.getWithSelledPercentage(RaffleStatus.VENDIDO.getStatus());
+	}
+
+	@Override
+	public List<RaffleDto> getAllActive() {
+		List<Raffle> lstRaffle = raffleRepository.findByRaffleDateAfter(Calendar.getInstance().getTime());
+		List<RaffleDto> lstDtos = RaffleBuilder.entitiesToDtos(lstRaffle);
+		List<RaffleNumber> lstNumber;
+		for(RaffleDto dto : lstDtos) {
+			lstNumber = raffleNumberRepository.findByIdRaffleIdAndStatus(dto.getId(), RaffleStatus.VENDIDO.getStatus());
+			dto.setSelledPercentage(Long.valueOf(lstNumber.size()));
+		}
+		
+		return lstDtos;
+	}
+
+	@Override
+	public RaffleDto getComplete(Long id) {
+		Raffle raffle = raffleRepository.getOne(id);
+		RaffleDto dto = RaffleBuilder.entityToDto(raffle);
+
+		dto.setRaffleNumbers(raffleNumberRepository.getByRaffleId(dto.getId()));
+		
+		dto.setSelledPercentage(Long.valueOf(dto.getRaffleNumbers().stream()
+				.filter(rf -> rf.getStatus().equals(RaffleStatus.VENDIDO.getStatus()))
+				.collect(Collectors.toList()).size()));
+		dto.setFreePercentage(Long.valueOf(dto.getRaffleNumbers().stream()
+				.filter(rf -> rf.getStatus().equals(RaffleStatus.LIBRE.getStatus()))
+				.collect(Collectors.toList()).size()));
+		dto.setSelectedPercentage(Long.valueOf(dto.getRaffleNumbers().stream()
+				.filter(rf -> rf.getStatus().equals(RaffleStatus.APARTADO.getStatus()))
+				.collect(Collectors.toList()).size()));
+			
+		return dto;
 	}
 
 }

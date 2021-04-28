@@ -15,4 +15,16 @@ export class RaffleService {
     return this.http.post<RaffleValues>(AppConstants.API_RAFFLE, raffle);
   }
 
+  public getAll():Observable<RaffleValues[]>{
+    return this.http.get<RaffleValues[]>(AppConstants.API_RAFFLE+'all');
+  }
+
+  public getAllActive():Observable<RaffleValues[]>{
+    return this.http.get<RaffleValues[]>(AppConstants.API_RAFFLE+'all/active');
+  }
+
+  public getOneComplete(id:number):Observable<RaffleValues>{
+    return this.http.get<RaffleValues>(AppConstants.API_RAFFLE+'one/complete/' + id);
+  }
+
 }
