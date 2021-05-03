@@ -4,5 +4,6 @@ export class RaffleNumbers {
     amount:number;
     status:string;
     userId:number;
-    userEmail: string;
+    email: string;
+    oldEmail: string;
 }

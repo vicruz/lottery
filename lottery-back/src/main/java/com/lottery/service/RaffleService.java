@@ -21,4 +21,8 @@ public interface RaffleService {
 	
 	public RaffleDto getComplete(Long id);
 	
+	public RaffleDto update(RaffleDto dto);
+	
+	public List<Long> getNumbersByStatus(Long id, String status);
+	
 }

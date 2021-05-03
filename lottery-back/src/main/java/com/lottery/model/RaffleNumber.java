@@ -34,6 +34,9 @@ public class RaffleNumber implements Serializable{
 	@Column(name="RAFFLE_STATUS")
     private String status;
 	
+	@Column(name="USER_ID", insertable = false, updatable = false)
+	private Long userId;
+	
 	@OneToOne
 	@JoinColumn(name="USER_ID", referencedColumnName = "USER_ID")
 	private User user;

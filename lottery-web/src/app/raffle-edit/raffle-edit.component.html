@@ -61,7 +61,7 @@
                                   Apartado
                                 </div>
                                 <div *ngIf="layoutPaid > 0" fxFlex="layoutPaid" style="background-color:orangered; text-align:center; color:white">
-                                  Pagado
+                                  Vendido
                                 </div>
                               </div>
 
@@ -71,9 +71,10 @@
                                 <div class="col-md-12 card" style="height:300px; overflow:auto">
                                     <table class="table">
                                         <thead class=" text-primary">
-                                            <th>Número</th>
+                                            <th>#</th>
                                             <th>Monto</th>
                                             <th>Estatus</th>
+                                            <th>Usuario</th>
                                         </thead>
                                         <tbody>
                                             <tr *ngFor="let data of collection; let idx=index">
@@ -81,11 +82,26 @@
                                                 <!-- <td>$ <span inputmode="number" contenteditable="true">{{data.amount}}</span></td> -->
                                                 <td>
                                                     <mat-form-field >
-                                                        <input matInput type="number" min="0" max="100" maxlength="3" style="text-align: right;" value="{{data.amount}}">
+                                                        <input matInput type="number" min="0" max="100" maxlength="3" style="text-align: right;" [value]="data.amount" (change)="changeAmount($event, idx)">
                                                         <span matPrefix>$</span>
                                                     </mat-form-field>
                                                 </td>
-                                                <td>{{data.status}}</td>
+                                                <!--<td>{{data.status}}</td>-->
+                                               
+                                                <td>
+                                                    <mat-form-field>
+                                                        <mat-select class="form-control" [(value)]="data.status" [disabled]="raffleCode==0" (selectionChange)="changeStatus($event, idx)">
+                                                            <mat-option *ngFor="let status of statusArr" [value] ="status" >
+                                                                {{status}}
+                                                            </mat-option>
+                                                        </mat-select>
+                                                    </mat-form-field>
+                                                </td>
+
+                                                <td>
+                                                    {{data.email}}
+                                                </td>
+                                            
                                             </tr>
                                     </table>
                                 </div>

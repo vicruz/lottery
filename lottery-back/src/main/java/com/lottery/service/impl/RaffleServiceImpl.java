@@ -9,6 +9,7 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import com.lotteru.builders.RaffleBuilder;
 import com.lotteru.builders.RaffleNumberBuilder;
@@ -132,4 +133,58 @@ public class RaffleServiceImpl implements RaffleService {
 		return dto;
 	}
 
+	@Override
+	@Transactional
+	public RaffleDto update(RaffleDto dto) {
+		//Update Raffle
+		Raffle raffle = raffleRepository.getOne(dto.getId());
+		raffle.setRaffleName(dto.getName());
+		raffle.setRaffleDate(dto.getDate());
+		raffle.setRaffleImage(dto.getImage());
+		raffle.setProductDescription(dto.getDescription());
+		raffle.setRafflePercentage(dto.getPercentage());
+
+		//Update RaffleNumbers
+		List<RaffleNumber> lst = raffleNumberRepository.findByIdRaffleId(dto.getId());
+		RaffleNumberDto rnDto;
+		int idx = 0;
+		
+		for(RaffleNumber rn : lst) {
+			rnDto = dto.getRaffleNumbers().get(idx);
+			if(!rn.getStatus().equalsIgnoreCase(rnDto.getStatus())) {
+				rn.setStatus(rnDto.getStatus());
+			}
+			
+			if(rn.getAmount().compareTo(rnDto.getAmount())!=0) {
+				rn.setAmount(rnDto.getAmount());
+			}
+			
+			if(rn.getUserId()!=null && 
+					(rnDto.getEmail()==null || rnDto.getEmail().equals(""))) {
+				rn.setUser(null);
+			}
+			
+			idx++;
+		}
+		
+		raffleNumberRepository.saveAll(lst);
+		
+		return dto;
+	}
+
+	@Override
+	public List<Long> getNumbersByStatus(@PathVariable Long id, String status) {
+		List<Long> lstAvailable = new ArrayList<>();
+		List<RaffleNumber> lstNumber;
+		
+		lstNumber = raffleNumberRepository.findByIdRaffleIdAndStatus(id, status);
+		if(lstNumber!=null && !lstNumber.isEmpty()) 
+			lstAvailable = lstNumber.stream().map(item->item.getId().getRaffleNumber()).collect(Collectors.toList());
+			
+		return lstAvailable;
+	}
+
+	
+	
+	
 }

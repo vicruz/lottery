@@ -21,7 +21,8 @@ public interface RaffleNumberRepository extends JpaRepository<RaffleNumber, Raff
 			+ "rf.status, usr.email) "
 			+ "from RaffleNumber rf "
 			+ "left join rf.user usr "
-			+ "where rf.id.raffleId = :raffleId")
+			+ "where rf.id.raffleId = :raffleId "
+			+ "order by rf.id.raffleNumber" )
 	List<RaffleNumberDto> getByRaffleId(Long raffleId);
 	
 }

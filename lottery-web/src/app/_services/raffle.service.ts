@@ -27,4 +27,8 @@ export class RaffleService {
     return this.http.get<RaffleValues>(AppConstants.API_RAFFLE+'one/complete/' + id);
   }
 
+  public update(raffle:RaffleValues):Observable<RaffleValues>{
+    return this.http.put<RaffleValues>(AppConstants.API_RAFFLE, raffle);
+  }
+
 }

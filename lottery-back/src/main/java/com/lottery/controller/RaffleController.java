@@ -7,12 +7,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.lottery.dto.RaffleDto;
+import com.lottery.dto.RaffleNumberDto;
+import com.lottery.exceptions.LotteryException;
 import com.lottery.service.RaffleService;
 
 @RestController
@@ -42,10 +45,27 @@ public class RaffleController {
 		return raffleService.getComplete(id);
 	}
 	
-	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	@ResponseStatus(code = HttpStatus.OK)
 	@PostMapping
 	public RaffleDto save(@RequestBody RaffleDto dto) {
 		return raffleService.save(dto);
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+	@PutMapping
+	public RaffleDto update(@RequestBody RaffleDto dto) {
+		return raffleService.update(dto);
+	}
+	
+	@GetMapping("/list/{id}/{status}")
+	public List<Long> getByStatus(@PathVariable Long id, @PathVariable String status){
+		return raffleService.getNumbersByStatus(id, status);
+	}
+	
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	@PutMapping("/assign")
+	public void updateNumber(@RequestBody RaffleNumberDto dto) throws LotteryException{
+		raffleService.updateNumber(dto.getRaffleId(), dto.getNumber(), dto.getEmail());
 	}
 	
 }
