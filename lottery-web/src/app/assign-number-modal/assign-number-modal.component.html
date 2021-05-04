@@ -1,0 +1,49 @@
+<!--
+<h1 mat-dialog-title>Sorteo de numero {{raffleName}}</h1>
+<div mat-dialog-content>
+    <div *ngIf="availableNumbers.length">No hay numeros disponibles</div>
+    <div *ngIf="!availableNumbers.length">No hay numeros disponibles</div>    
+    
+</div>
+<div mat-dialog-actions style="padding-top: 15px; text-align: end;">
+  <button mat-button style="border: white;" (click)="close()">Cancelar</button>
+  <button mat-button style="border: white;" (click)="close()">Aceptar</button>
+</div>
+-->
+<div class="card">
+    <div class="card-header card-header-danger">
+        <h4 class="card-title">{{raffleName}}</h4>
+        <p class="card-category">Sorteo de Numero</p>
+    </div>
+    <div class="card-body">
+        <div *ngIf="!availableNumbers.length">No hay numeros disponibles</div>
+        <div *ngIf="availableNumbers.length">
+            <form>
+                <div class="row" *ngIf="numberAssigned.number==-1">
+                    <button mat-raised-button class="btn btn-info pull-center" (click)="getNumber()" >Obtener numero</button>
+                </div>
+
+                <div class="row" *ngIf="numberAssigned.number==-1" style="padding-top: 20px;padding-bottom: 20px;">
+                    <h4 class="card-title">Numero al azar</h4>
+                </div>
+                
+
+                <div class="row" *ngIf="numberAssigned.number>-1" style="padding-top: 20px;">
+                    <h4 class="card-title">Numero asignado: {{numberAssigned.number}}</h4>
+                </div>
+                <div class="row" *ngIf="numberAssigned.number>-1" >
+                    <p class="card-description">
+                        Monto a pagar: ${{numberAssigned.amount}}
+                    </p>
+                </div>
+                <div class="row" *ngIf="numberAssigned.number>-1" style="padding-bottom: 20px;">
+                    <p class="card-description">
+                        Se ha enviado un correo con las instrucciones de pago
+                    </p>
+                </div>        
+            </form>
+            <div class="clearfix"></div>
+        </div>
+        <button mat-raised-button class="btn btn-danger pull-right" (click)="close()">Cerrar</button>
+    </div>
+</div>
