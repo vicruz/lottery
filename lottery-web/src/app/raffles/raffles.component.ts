@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
+import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
+import { AssignNumberModalComponent } from 'app/assign-number-modal/assign-number-modal.component';
+import { RaffleNumbers } from 'app/response/raffle-numbers';
 import { RaffleValues } from 'app/response/raffle-values';
 import { RaffleService } from 'app/_services/raffle.service';
 import * as Chartist from 'chartist';
@@ -13,7 +16,8 @@ export class RafflesComponent implements OnInit {
 
   listRaffles:RaffleValues[] = [];
 
-  constructor(private router: Router, private raffleService:RaffleService) { }
+  constructor(private router: Router, private raffleService:RaffleService,
+    private dialog: MatDialog) { }
 
   public createRaffle(){
     this.router.navigate(["raffles/edit"]);
@@ -170,6 +174,13 @@ ngOnInit() {
 
 public editRaffle(raffle:RaffleValues){
   this.router.navigate(["raffles/edit/"+raffle.id]);
+}
+
+public assignNumber(raff:RaffleValues){
+  this.dialog.open(AssignNumberModalComponent, { disableClose: true, data:{
+    raffleId: raff.id,
+    raffleName: raff.name 
+  }});
 }
 
 }

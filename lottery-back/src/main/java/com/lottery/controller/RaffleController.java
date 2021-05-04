@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.lottery.config.CurrentUser;
+import com.lottery.dto.LocalUser;
 import com.lottery.dto.RaffleDto;
 import com.lottery.dto.RaffleNumberDto;
 import com.lottery.exceptions.LotteryException;
@@ -58,14 +60,14 @@ public class RaffleController {
 	}
 	
 	@GetMapping("/list/{id}/{status}")
-	public List<Long> getByStatus(@PathVariable Long id, @PathVariable String status){
+	public List<RaffleNumberDto> getByStatus(@PathVariable Long id, @PathVariable String status){
 		return raffleService.getNumbersByStatus(id, status);
 	}
 	
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
-	@PutMapping("/assign")
-	public void updateNumber(@RequestBody RaffleNumberDto dto) throws LotteryException{
-		raffleService.updateNumber(dto.getRaffleId(), dto.getNumber(), dto.getEmail());
+	@PutMapping("/assign/{raffleId}/{number}")
+	public void updateNumber(@CurrentUser LocalUser user, @PathVariable Long raffleId, @PathVariable Long number) throws LotteryException{
+		raffleService.updateNumber(raffleId, number, user.getUser().getId());
 	}
 	
 }

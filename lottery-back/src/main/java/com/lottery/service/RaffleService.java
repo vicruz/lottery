@@ -3,6 +3,7 @@ package com.lottery.service;
 import java.util.List;
 
 import com.lottery.dto.RaffleDto;
+import com.lottery.dto.RaffleNumberDto;
 import com.lottery.exceptions.LotteryException;
 
 public interface RaffleService {
@@ -17,12 +18,12 @@ public interface RaffleService {
 	
 	public RaffleDto save(RaffleDto dto);
 	
-	public void updateNumber(Long raffleId, Long number, String email) throws LotteryException;
+	public void updateNumber(Long raffleId, Long number, Long userId) throws LotteryException;
 	
 	public RaffleDto getComplete(Long id);
 	
 	public RaffleDto update(RaffleDto dto);
 	
-	public List<Long> getNumbersByStatus(Long id, String status);
+	public List<RaffleNumberDto> getNumbersByStatus(Long id, String status);
 	
 }

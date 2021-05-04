@@ -1,8 +1,13 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AppConstants } from 'app/common/app.constants';
+import { RaffleNumbers } from 'app/response/raffle-numbers';
 import { RaffleValues } from 'app/response/raffle-values';
 import { Observable } from 'rxjs';
+
+const httpOptions = {
+  headers: new HttpHeaders({ 'Content-Type': 'application/json' })
+};
 
 @Injectable({
   providedIn: 'root'
@@ -29,6 +34,14 @@ export class RaffleService {
 
   public update(raffle:RaffleValues):Observable<RaffleValues>{
     return this.http.put<RaffleValues>(AppConstants.API_RAFFLE, raffle);
+  }
+
+  public getByStatus(id:number, status:string):Observable<RaffleNumbers[]>{
+    return this.http.get<RaffleNumbers[]>(AppConstants.API_RAFFLE+'list/' + id + '/' + status);
+  }
+
+  public assign(raffle:RaffleNumbers):Observable<any>{
+    return this.http.put<any>(AppConstants.API_RAFFLE+'assign/'+raffle.raffleId+'/'+raffle.number,httpOptions);
   }
 
 }

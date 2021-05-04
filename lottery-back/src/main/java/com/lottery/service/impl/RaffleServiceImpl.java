@@ -77,7 +77,7 @@ public class RaffleServiceImpl implements RaffleService {
 	}
 
 	@Override
-	public void updateNumber(Long raffleId, Long number, String email) throws LotteryException {
+	public void updateNumber(Long raffleId, Long number, Long userId) throws LotteryException {
 		RaffleNumberPk pk = new RaffleNumberPk();
 		pk.setRaffleId(raffleId);
 		pk.setRaffleNumber(number);
@@ -86,11 +86,12 @@ public class RaffleServiceImpl implements RaffleService {
 		if(optional.isEmpty())
 			throw new LotteryException("Numero de rifa inexistente");
 
-		User user = userRepository.findByEmail(email);
+		User user = userRepository.getOne(userId);
 		if(user == null)
 			throw new LotteryException("Usuario inexistente");
 		
 		RaffleNumber raffleNumber = optional.get();
+		raffleNumber.setStatus(RaffleStatus.VENDIDO.getStatus());
 		raffleNumber.setUser(user);
 		raffleNumberRepository.saveAndFlush(raffleNumber);	
 	}
@@ -173,15 +174,14 @@ public class RaffleServiceImpl implements RaffleService {
 	}
 
 	@Override
-	public List<Long> getNumbersByStatus(@PathVariable Long id, String status) {
-		List<Long> lstAvailable = new ArrayList<>();
+	public List<RaffleNumberDto> getNumbersByStatus(@PathVariable Long id, String status) {
 		List<RaffleNumber> lstNumber;
 		
 		lstNumber = raffleNumberRepository.findByIdRaffleIdAndStatus(id, status);
-		if(lstNumber!=null && !lstNumber.isEmpty()) 
-			lstAvailable = lstNumber.stream().map(item->item.getId().getRaffleNumber()).collect(Collectors.toList());
-			
-		return lstAvailable;
+		if(lstNumber.isEmpty())
+			return new ArrayList<>();
+		
+		return RaffleNumberBuilder.entitiesToDtos(lstNumber);
 	}
 
 	

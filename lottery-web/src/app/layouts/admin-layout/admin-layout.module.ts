@@ -24,6 +24,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatTableModule } from '@angular/material/table';
 import { ImagedndDirective } from 'app/_directives/imagednd.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { BrowserModule } from '@angular/platform-browser';
+import { MatDialogModule } from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -41,7 +43,8 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 //    MaterialModule,
     MatNativeDateModule,
     MatTableModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    MatDialogModule
   ],
   declarations: [
     DashboardComponent,

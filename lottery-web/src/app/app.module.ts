@@ -32,6 +32,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { UsersPanelComponent } from './users-panel/users-panel.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { AssignNumberModalComponent } from './assign-number-modal/assign-number-modal.component';
 
 
 @NgModule({
@@ -55,7 +56,8 @@ import { MAT_DATE_LOCALE } from '@angular/material/core';
     AdminLayoutComponent,
     LoginComponent,
     SignupComponent,
-    UsersPanelComponent
+    UsersPanelComponent,
+    AssignNumberModalComponent
   ],
   providers: [authInterceptorProviders,{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]
