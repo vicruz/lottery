@@ -47,8 +47,12 @@ public class Raffle implements Serializable{
 	@Column(name = "PRODUCT_DESCRIPTION")
 	private String productDescription;
 	
-	@Column(name = "RAFFLE_IMAGE")
+	@Column(name = "RAFFLE_IMAGE", length = 100000)
 	private byte[] raffleImage;
+	
+	@Column(name = "CONTENT_TYPE")
+	private String contentType;
+	
 	
 	@OneToMany(mappedBy="raffle", fetch = FetchType.LAZY)
 	private List<RaffleNumber> raffleNumbers;

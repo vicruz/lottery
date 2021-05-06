@@ -1,16 +1,21 @@
 package com.lottery.service.impl;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.zip.Deflater;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lotteru.builders.RaffleBuilder;
 import com.lotteru.builders.RaffleNumberBuilder;
 import com.lottery.dto.RaffleDto;
@@ -24,6 +29,7 @@ import com.lottery.model.User;
 import com.lottery.repository.RaffleNumberRepository;
 import com.lottery.repository.RaffleRepository;
 import com.lottery.repository.UserRepository;
+import com.lottery.service.EmailService;
 import com.lottery.service.RaffleService;
 
 @Service
@@ -38,6 +44,9 @@ public class RaffleServiceImpl implements RaffleService {
 	
 	@Autowired
 	private UserRepository userRepository;
+	
+	@Autowired
+	private EmailService emailService;
 	
 	@Override
 	public List<RaffleDto> getAll() {
@@ -93,7 +102,9 @@ public class RaffleServiceImpl implements RaffleService {
 		RaffleNumber raffleNumber = optional.get();
 		raffleNumber.setStatus(RaffleStatus.VENDIDO.getStatus());
 		raffleNumber.setUser(user);
-		raffleNumberRepository.saveAndFlush(raffleNumber);	
+		raffleNumberRepository.saveAndFlush(raffleNumber);
+		
+		emailService.sendMessage(user.getEmail(), "Sorteo Dummy", user.getEmail());
 	}
 
 	@Override
@@ -103,7 +114,9 @@ public class RaffleServiceImpl implements RaffleService {
 
 	@Override
 	public List<RaffleDto> getAllActive() {
-		List<Raffle> lstRaffle = raffleRepository.findByRaffleDateAfter(Calendar.getInstance().getTime());
+		Calendar cal = Calendar.getInstance();
+		cal.add(Calendar.DAY_OF_MONTH, -1);
+		List<Raffle> lstRaffle = raffleRepository.findByRaffleDateAfter(cal.getTime());
 		List<RaffleDto> lstDtos = RaffleBuilder.entitiesToDtos(lstRaffle);
 		List<RaffleNumber> lstNumber;
 		for(RaffleDto dto : lstDtos) {
@@ -118,7 +131,7 @@ public class RaffleServiceImpl implements RaffleService {
 	public RaffleDto getComplete(Long id) {
 		Raffle raffle = raffleRepository.getOne(id);
 		RaffleDto dto = RaffleBuilder.entityToDto(raffle);
-
+		
 		dto.setRaffleNumbers(raffleNumberRepository.getByRaffleId(dto.getId()));
 		
 		dto.setSelledPercentage(Long.valueOf(dto.getRaffleNumbers().stream()
@@ -184,7 +197,147 @@ public class RaffleServiceImpl implements RaffleService {
 		return RaffleNumberBuilder.entitiesToDtos(lstNumber);
 	}
 
-	
-	
+	@Override
+	public RaffleDto saveController(String value, MultipartFile image) {
+		
+		RaffleDto dto = new RaffleDto();
+		
+		ObjectMapper objectMapper = new ObjectMapper();
+		try {
+			dto = objectMapper.readValue(value, RaffleDto.class);
+
+			dto.setContentType(image.getContentType());				
+			dto.setImage(convertToBytes(image.getBytes()));
+			
+			Raffle raffle = raffleRepository.save(RaffleBuilder.dtoToEntity(dto));
+			dto.setId(raffle.getRaffleId());
+			RaffleNumber rnTmp;
+			List<RaffleNumber> lstRn = new ArrayList<>();
+			
+			for(RaffleNumberDto rnDto: dto.getRaffleNumbers()) {
+				rnTmp = RaffleNumberBuilder.dtoToEntity(rnDto);
+				rnTmp.getId().setRaffleId(raffle.getRaffleId());
+				lstRn.add(rnTmp);
+			}
+			
+			raffleNumberRepository.saveAll(lstRn);
+			
+			return dto;
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+		
+	}
+
+	@Override
+	public RaffleDto updateController(String value, MultipartFile image) {
+		
+		RaffleDto dto = new RaffleDto();
+		Deflater deflater = new Deflater();
+		try {
+			ObjectMapper objectMapper = new ObjectMapper();
+			dto = objectMapper.readValue(value, RaffleDto.class);
+			
+			//Update Raffle
+			Raffle raffle = raffleRepository.getOne(dto.getId());
+			raffle.setRaffleName(dto.getName());
+			raffle.setRaffleDate(dto.getDate());
+			raffle.setRaffleImage(dto.getImage());
+			raffle.setProductDescription(dto.getDescription());
+			raffle.setRafflePercentage(dto.getPercentage());
+			
+			if(image!=null) {
+				deflater.setInput(image.getBytes());
+				deflater.finish();
+				ByteArrayOutputStream outputStream = new ByteArrayOutputStream(image.getBytes().length);
+				byte[] buffer = new byte[1024];
+				while (!deflater.finished()) {
+					int count = deflater.deflate(buffer);
+					outputStream.write(buffer, 0, count);
+				}
+				outputStream.close();
+				System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+				
+				dto.setContentType(image.getContentType());				
+				dto.setImage(outputStream.toByteArray());
+				raffle.setRaffleImage(dto.getImage());
+				raffle.setContentType(image.getContentType());
+			}
+			
+			//Update RaffleNumbers
+			List<RaffleNumber> lst = raffleNumberRepository.findByIdRaffleId(dto.getId());
+			RaffleNumberDto rnDto;
+			int idx = 0;
+			
+			for(RaffleNumber rn : lst) {
+				rnDto = dto.getRaffleNumbers().get(idx);
+				if(!rn.getStatus().equalsIgnoreCase(rnDto.getStatus())) {
+					rn.setStatus(rnDto.getStatus());
+				}
+				
+				if(rn.getAmount().compareTo(rnDto.getAmount())!=0) {
+					rn.setAmount(rnDto.getAmount());
+				}
+				
+				if(rn.getUserId()!=null && 
+						(rnDto.getEmail()==null || rnDto.getEmail().equals(""))) {
+					rn.setUser(null);
+				}
+				
+				idx++;
+			}
+			
+			raffleNumberRepository.saveAll(lst);
+		}catch(IOException ex) {
+			
+		}
+		
+				
+		return dto;
+	}
+
+	@Override
+	public void saveImage(Long raffleId, MultipartFile file) {
+		
+		if(file == null) return;
+		
+		Raffle raffle = raffleRepository.getOne(raffleId);
+		raffle.setContentType(file.getContentType());
+		try {
+			raffle.setRaffleImage(convertToBytes(file.getBytes()));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+
+	private byte[] convertToBytes(byte[] data){
+
+		Deflater deflater = new Deflater();
+		ByteArrayOutputStream outputStream = null;
+		
+		try {
+			if(data!=null && data.length>0) {
+				deflater.setInput(data);
+				deflater.finish();
+				outputStream = new ByteArrayOutputStream(data.length);
+				byte[] buffer = new byte[1024];
+				while (!deflater.finished()) {
+					int count = deflater.deflate(buffer);
+					outputStream.write(buffer, 0, count);
+				}
+				outputStream.close();
+				System.out.println("Compressed Image Byte Size - " + outputStream.toByteArray().length);
+				
+			}
+			
+			return outputStream.toByteArray();
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
 	
 }

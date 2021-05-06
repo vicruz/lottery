@@ -28,9 +28,14 @@
                 <div class="card card-chart">
                     
                     <div class="card-header" style="align-self: center;" >
-                        <a href="javascript:void(0)" >
-                            <img class="img" src="./assets/img/pngegg.png" height="150px"/>
-                        </a>
+                        <div *ngIf="raff.retreivedImage">
+                            <img [src]="raff.retreivedImage" height="150px">
+                        </div>
+                        <div *ngIf="!raff.image">
+                            <a href="javascript:void(0)" >
+                                <img class="img" src="./assets/img/pngegg.png" height="150px"/>
+                            </a>
+                        </div>
                     </div>
                     <div class="card-body">
                         <h4 class="card-title">{{raff.name}}</h4>

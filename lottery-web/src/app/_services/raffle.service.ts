@@ -15,9 +15,16 @@ const httpOptions = {
 export class RaffleService {
 
   constructor(private http: HttpClient) { }
-
+/*
   public save(raffle:RaffleValues):Observable<RaffleValues>{
     return this.http.post<RaffleValues>(AppConstants.API_RAFFLE, raffle);
+  }
+*/
+  public save(formData:FormData):Observable<RaffleValues>{
+    return this.http.post<RaffleValues>(AppConstants.API_RAFFLE, formData);
+  }
+  public saveImage(formData:FormData):Observable<RaffleValues>{
+    return this.http.post<RaffleValues>(AppConstants.API_RAFFLE+'image', formData);
   }
 
   public getAll():Observable<RaffleValues[]>{
@@ -34,6 +41,10 @@ export class RaffleService {
 
   public update(raffle:RaffleValues):Observable<RaffleValues>{
     return this.http.put<RaffleValues>(AppConstants.API_RAFFLE, raffle);
+  }
+
+  public updateImage(id:number, formData:FormData):Observable<RaffleValues>{
+    return this.http.post<RaffleValues>(AppConstants.API_RAFFLE + 'image/' + id, formData);
   }
 
   public getByStatus(id:number, status:string):Observable<RaffleNumbers[]>{

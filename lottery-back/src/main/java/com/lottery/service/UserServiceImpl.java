@@ -144,7 +144,7 @@ public class UserServiceImpl implements UserService {
 		Role roleAdmin = roleRepository.findByName(Role.ROLE_ADMIN);
 		
 		Optional<Role> roleAdminInUser = user.getRoles().stream()
-				.filter(roleTmp -> roleTmp.getRoleId() == roleAdmin.getRoleId()).findFirst();
+				.filter(roleTmp -> roleTmp.getRoleId() == roleAdmin.getRoleId()).findAny();
 		
 		if(roleAdminInUser.isEmpty() && active) 
 			user.getRoles().add(roleAdmin);

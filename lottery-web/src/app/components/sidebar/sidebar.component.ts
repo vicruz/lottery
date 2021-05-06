@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TokenStorageService } from 'app/_services/token-storage.service';
 
 declare const $: any;
 declare interface RouteInfo {
@@ -29,7 +30,7 @@ export const ROUTES: RouteInfo[] = [
 export class SidebarComponent implements OnInit {
   menuItems: any[];
 
-  constructor() { }
+  constructor(private tokenStorageService: TokenStorageService) { }
 
   ngOnInit() {
     this.menuItems = ROUTES.filter(menuItem => menuItem);
@@ -40,4 +41,9 @@ export class SidebarComponent implements OnInit {
       }
       return true;
   };
+
+  public logout(){
+    this.tokenStorageService.signOut();
+    window.location.reload();
+  }
 }

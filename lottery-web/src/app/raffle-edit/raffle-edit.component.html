@@ -116,10 +116,13 @@
 
             <div class="col-md-4">
                 <div class="card card-profile">
-                    <div *ngIf="!files.length" class="rmpm dropzone" appImagednd (files)="filesDropped($event)">
+                    <div *ngIf="!files.length && !imageShow" class="rmpm dropzone" appImagednd (files)="filesDropped($event)">
                         <!-- <input type="file" accept="image/jpg, image/gif, image/bmp" #fileDropRef id="fileDropRef" (change)="filesDropped($event)"/> -->
                         <span class="material-icons">upload</span>
                         <h3>Cargar imagen</h3>
+                    </div>
+                    <div *ngIf="imageShow" >
+                        <img [src]="imageShow" height="200px">
                     </div>
                     <!--droped image preview-->
                     <div *ngFor="let file of files">

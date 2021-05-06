@@ -4,14 +4,18 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.lottery.config.CurrentUser;
 import com.lottery.dto.LocalUser;
@@ -48,15 +52,26 @@ public class RaffleController {
 	}
 	
 	@ResponseStatus(code = HttpStatus.OK)
-	@PostMapping
-	public RaffleDto save(@RequestBody RaffleDto dto) {
-		return raffleService.save(dto);
+	@PostMapping(produces = MediaType.APPLICATION_JSON_VALUE,
+	consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	//public RaffleDto save(@RequestBody RaffleDto dto) {
+	public RaffleDto save(@RequestParam("dto") String dto, @RequestPart("image") MultipartFile file) {
+		return raffleService.saveController(dto, file);
 	}
 	
 	@ResponseStatus(code = HttpStatus.OK)
-	@PutMapping
+	@PostMapping("/image/{id}")
+	public void saveImage(@PathVariable Long id, @RequestParam("image") MultipartFile file) {
+		raffleService.saveImage(id, file);
+	}
+	
+	@ResponseStatus(code = HttpStatus.OK)
+	@PutMapping//(produces = MediaType.APPLICATION_JSON_VALUE,
+			//consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
+	//public RaffleDto update(@RequestParam("dto") String dto, @RequestPart("image") MultipartFile file) {
 	public RaffleDto update(@RequestBody RaffleDto dto) {
 		return raffleService.update(dto);
+		//return raffleService.updateController(dto, file);
 	}
 	
 	@GetMapping("/list/{id}/{status}")

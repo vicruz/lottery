@@ -84,6 +84,11 @@ ngOnInit() {
 
   this.raffleService.getAllActive().subscribe((resp:RaffleValues[])=>{
     this.listRaffles = resp;
+    this.listRaffles.forEach(raffle =>{
+      if(raffle.image!=null){
+        raffle.retreivedImage = 'data:image/jpeg;base64,' + raffle.image;
+      }
+    })
   });
 
 

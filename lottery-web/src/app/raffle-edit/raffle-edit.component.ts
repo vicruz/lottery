@@ -32,6 +32,7 @@ export class RaffleEditComponent implements OnInit {
   layoutTemp:number = 0;
   layoutPaid:number = 0;
   valueDb:RaffleValues;
+  imageShow:any;
 
   
   @ViewChild('description', {static: true}) descriptionElement: ElementRef;
@@ -80,10 +81,12 @@ export class RaffleEditComponent implements OnInit {
             this.collection[idx].oldEmail = resp.raffleNumbers[idx].email;
           }
 
+          if(resp.image != null){
+            this.imageShow = 'data:image/jpeg;base64,' + resp.image;
+          }
+
           this.collection.slice();
         });
-      }else{
-        
       }
     });
 
@@ -95,6 +98,11 @@ export class RaffleEditComponent implements OnInit {
 
   filesDropped(files: FileHandle[]): void {
     if(files.length>0 && files[0].file.type.includes("image")){
+      if(files[0].file.size > 100000){
+        this.notificationComponent.showNotificationWarning('El tamaño máximo de la imagen es de 100k');
+        this.files = [];
+        return;
+      }
       this.files.push(files[0]);
     }else{
       this.notificationComponent.showNotificationWarning('Solo se permiten imágenes');
@@ -132,19 +140,26 @@ export class RaffleEditComponent implements OnInit {
     info.description = this.descriptionElement.nativeElement.value;
     
     let formData = new FormData();
-    formData.append('file', this.files[0].file);
-    //info.image = formData;
+    formData.append('image', this.files[0].file, this.files[0].file.name);
+    formData.append('dto', JSON.stringify(info));
 
     if(info.id > 0){
       this.raffleService.update(info).subscribe((resp:RaffleValues)=>{
+        this.raffleService.updateImage(info.id, formData).subscribe(resp=>{
+          this.router.navigate(["raffles"]);
+        },err=>{
+          console.log(err);
+          this.notificationComponent.showNotificationDanger('La imagen no pudo ser actualizada');  
+        });
         this.notificationComponent.showNotificationSuccess('Sorteo actualizado');
       });
     }else{
-      this.raffleService.save(info).subscribe((resp:RaffleValues)=>{
+      this.raffleService.save(formData).subscribe((resp:RaffleValues)=>{
         this.notificationComponent.showNotificationSuccess('Sorteo almacenado');
+        this.router.navigate(["raffles"]);
       });
     }
-    this.router.navigate(["raffles"]);
+    
   }
 
   public changeAmount($event:any, idx:number){
