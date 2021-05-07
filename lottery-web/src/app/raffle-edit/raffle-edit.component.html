@@ -52,20 +52,33 @@
                                 </div>
                             </div>
                             
-
-                            <div fxLayout="row">
-                                <div *ngIf="layoutFree > 0" fxFlex="layoutFree" style="background-color:darkgreen; text-align:center; color:white" >
-                                  Libre
+                            <div *ngIf="raffleCode>0" class="row">
+                                <div class="col-md-1" style="padding-top: 12px;">
+                                    <label for="progressFree">Libre: </label>
                                 </div>
-                                <div *ngIf="layoutTemp > 0" fxFlex="layoutTemp" style="background-color:deepskyblue; text-align:center; color:white">
-                                  Apartado
+                                <div class="col-md-11">
+                                    <progress-bar id="progressFree" [progress]="layoutFree" [color]="'#0066ff'">
+                                    </progress-bar>
                                 </div>
-                                <div *ngIf="layoutPaid > 0" fxFlex="layoutPaid" style="background-color:orangered; text-align:center; color:white">
-                                  Vendido
+                            </div>
+                            <div *ngIf="raffleCode>0" class="row">
+                                <div class="col-md-1" style="padding-top: 12px;">
+                                    <label for="progressTemp">Apartado: </label>
                                 </div>
-                              </div>
-
-
+                                <div class="col-md-11">
+                                    <progress-bar id="progressTemp" [progress]="layoutTemp" [color]="'#e6e600'">
+                                    </progress-bar>
+                                </div>
+                            </div>
+                            <div *ngIf="raffleCode>0" class="row">
+                                <div class="col-md-1" style="padding-top: 12px;">
+                                    <label for="progressPaid">Pagado: </label>
+                                </div>
+                                <div class="col-md-11">
+                                    <progress-bar id="progressPaid" [progress]="layoutPaid" [color]="'#00cc00'">
+                                    </progress-bar>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12 card" style="height:300px; overflow:auto">
@@ -135,6 +148,12 @@
                             <mat-form-field class="example-full-width">
                                <textarea matInput placeholder="Descripción del Producto" maxlength="200" id="description" name="description" #description ></textarea>
                             </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="raffleCode>0" class="card-footer">
+                        <div class="col-md-12">
+                            <button mat-raised-button type="button" class="btn btn-danger pull-right" (click)="assignWinner()">Asignar Ganador</button>
+                            <div class="clearfix"></div>
                         </div>
                     </div> 
                 </div>

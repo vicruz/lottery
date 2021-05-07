@@ -5,6 +5,7 @@ import { AssignNumberModalComponent } from 'app/assign-number-modal/assign-numbe
 import { RaffleNumbers } from 'app/response/raffle-numbers';
 import { RaffleValues } from 'app/response/raffle-values';
 import { RaffleService } from 'app/_services/raffle.service';
+import { TokenStorageService } from 'app/_services/token-storage.service';
 import * as Chartist from 'chartist';
 
 @Component({
@@ -15,9 +16,10 @@ import * as Chartist from 'chartist';
 export class RafflesComponent implements OnInit {
 
   listRaffles:RaffleValues[] = [];
+  isAdmin = false;
 
   constructor(private router: Router, private raffleService:RaffleService,
-    private dialog: MatDialog) { }
+    private dialog: MatDialog, private tokenStorageService: TokenStorageService) { }
 
   public createRaffle(){
     this.router.navigate(["raffles/edit"]);
@@ -81,6 +83,10 @@ startAnimationForBarChart(chart){
 };
 
 ngOnInit() {
+
+  const user = this.tokenStorageService.getUser();
+      let roles = user.roles;
+      this.isAdmin = roles.includes('ROLE_ADMIN');
 
   this.raffleService.getAllActive().subscribe((resp:RaffleValues[])=>{
     this.listRaffles = resp;

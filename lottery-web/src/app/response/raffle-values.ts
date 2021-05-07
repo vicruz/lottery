@@ -12,4 +12,5 @@ export class RaffleValues {
     freePercentage:number;
     selectedPercentage:number;
     retreivedImage:any;
+    status:string;
 }

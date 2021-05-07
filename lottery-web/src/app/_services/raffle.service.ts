@@ -55,4 +55,8 @@ export class RaffleService {
     return this.http.put<any>(AppConstants.API_RAFFLE+'assign/'+raffle.raffleId+'/'+raffle.number,httpOptions);
   }
 
+  public updateStatus(id:number, raffleNumber:number):Observable<any>{
+    return this.http.get<any>(AppConstants.API_RAFFLE+'status/'+id+'/'+raffleNumber);
+  }
+
 }

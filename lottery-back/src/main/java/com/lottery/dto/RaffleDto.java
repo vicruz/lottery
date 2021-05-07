@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -33,6 +31,7 @@ public class RaffleDto implements Serializable {
 	private Long selledPercentage;
 	private Long freePercentage;
 	private Long selectedPercentage;
+	private String status;
 	private List<RaffleNumberDto> raffleNumbers;
 
 	public RaffleDto(Long id, String name, Date date, Double percentage, String description, byte[] image, Long selledPercentage) {

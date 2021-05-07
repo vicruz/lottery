@@ -91,6 +91,8 @@ public class RaffleServiceImpl implements RaffleService {
 		pk.setRaffleId(raffleId);
 		pk.setRaffleNumber(number);
 		
+		Raffle raffle = raffleRepository.getOne(raffleId);
+		
 		Optional<RaffleNumber> optional = raffleNumberRepository.findById(pk);
 		if(optional.isEmpty())
 			throw new LotteryException("Numero de rifa inexistente");
@@ -104,7 +106,8 @@ public class RaffleServiceImpl implements RaffleService {
 		raffleNumber.setUser(user);
 		raffleNumberRepository.saveAndFlush(raffleNumber);
 		
-		emailService.sendMessage(user.getEmail(), "Sorteo Dummy", user.getEmail());
+		emailService.sendMessage(user.getEmail(), "Sorteo " + raffle.getRaffleName(), user.getDisplayName(), 
+				raffle.getRaffleDate().toString(),""+number, ""+raffleNumber.getAmount());
 	}
 
 	@Override
@@ -338,6 +341,15 @@ public class RaffleServiceImpl implements RaffleService {
 			e.printStackTrace();
 			return null;
 		}
+	}
+
+	@Transactional
+	@Override
+	public void updateRaffleStatus(Long raffleId, Long number) {
+		Raffle raffle = raffleRepository.getOne(raffleId);
+		raffle.setRaffleStatus(RaffleStatus.FINALIZADO.getStatus());
+		
+		raffleRepository.save(raffle);
 	}
 	
 }

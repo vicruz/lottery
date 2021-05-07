@@ -33,6 +33,7 @@ import { UsersPanelComponent } from './users-panel/users-panel.component';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { AssignNumberModalComponent } from './assign-number-modal/assign-number-modal.component';
+import { AssignWinnerModalComponent } from './assign-winner-modal/assign-winner-modal.component';
 
 
 @NgModule({

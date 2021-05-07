@@ -85,4 +85,10 @@ public class RaffleController {
 		raffleService.updateNumber(raffleId, number, user.getUser().getId());
 	}
 	
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	@GetMapping("/status/{raffleId}/{number}")
+	public void updateRaffleStatus(@PathVariable Long raffleId, @PathVariable Long number) throws LotteryException{
+		raffleService.updateRaffleStatus(raffleId, number);
+	}
+	
 }

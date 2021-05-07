@@ -2,7 +2,9 @@ import { ChangeDetectorRef, ViewChild } from '@angular/core';
 import { ElementRef } from '@angular/core';
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { MatDialog } from '@angular/material/dialog';
 import { ActivatedRoute, Router } from '@angular/router';
+import { AssignWinnerModalComponent } from 'app/assign-winner-modal/assign-winner-modal.component';
 import { AppConstants } from 'app/common/app.constants';
 import { NotificationsComponent } from 'app/notifications/notifications.component';
 import { RaffleNumbers } from 'app/response/raffle-numbers';
@@ -33,13 +35,14 @@ export class RaffleEditComponent implements OnInit {
   layoutPaid:number = 0;
   valueDb:RaffleValues;
   imageShow:any;
+  status = AppConstants.ACTIVE;
 
   
   @ViewChild('description', {static: true}) descriptionElement: ElementRef;
   myDescriptionElement: string = "";
   constructor(private formBuilder: FormBuilder, descriptionElement: ElementRef,
     private raffleService:RaffleService, private activatedRoute: ActivatedRoute,
-    private router: Router) { 
+    private router: Router, private dialog: MatDialog) { 
     this.descriptionElement = descriptionElement;
     this.notificationComponent = new NotificationsComponent();
 
@@ -84,6 +87,8 @@ export class RaffleEditComponent implements OnInit {
           if(resp.image != null){
             this.imageShow = 'data:image/jpeg;base64,' + resp.image;
           }
+
+          this.status = resp.status;
 
           this.collection.slice();
         });
@@ -138,6 +143,7 @@ export class RaffleEditComponent implements OnInit {
     info.percentage = this.raffleForm.controls.formPercentage.value;
     info.raffleNumbers = this.collection;
     info.description = this.descriptionElement.nativeElement.value;
+    info.status = this.status;
     
     let formData = new FormData();
     formData.append('image', this.files[0].file, this.files[0].file.name);
@@ -160,6 +166,7 @@ export class RaffleEditComponent implements OnInit {
       });
     }
     
+
   }
 
   public changeAmount($event:any, idx:number){
@@ -175,6 +182,12 @@ export class RaffleEditComponent implements OnInit {
       this.collection[idx].email = this.collection[idx].oldEmail;
     }
 
+  }
+
+  public assignWinner(raff:RaffleValues){
+    this.dialog.open(AssignWinnerModalComponent, { disableClose: true, data:{
+      raffleId: this.raffleCode 
+    }});
   }
 
 }

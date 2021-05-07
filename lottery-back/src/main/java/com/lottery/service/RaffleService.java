@@ -33,4 +33,7 @@ public interface RaffleService {
 	public List<RaffleNumberDto> getNumbersByStatus(Long id, String status);
 	
 	public void saveImage(Long raffleId, MultipartFile file);
+	
+	public void updateRaffleStatus(Long raffleId, Long number);
+	
 }

@@ -1,6 +1,6 @@
 <div class="main-content">
     <div class="container-fluid">
-        <div class="row">
+        <div class="row" *ngIf="isAdmin">
             
             <div class="col-lg-3 col-md-6 col-sm-6" style="cursor: pointer;" (click)="createRaffle()">
                 <div class="card card-stats">
@@ -46,14 +46,19 @@
                         
                     </div>
                     <div class="card-footer">
-                        <div class="stats">
+                        <div class="stats" *ngIf="raff.status=='Activo'">
                             <a (click)="assignNumber(raff)" style="cursor: pointer;">
-                                <i class="material-icons">monetization_on</i> Participar
+                                <i class="material-icons" style="padding-bottom: 10px;">monetization_on</i> Participar
                             </a>
                         </div>
-                        <div class="stats">
+                        <div class="stats" *ngIf="raff.status!='Activo'">
+                            <a>
+                                <i class="material-icons" style="padding-bottom: 10px;">check_circle_outline</i> Finalizado
+                            </a>
+                        </div>
+                        <div class="stats" *ngIf="isAdmin">
                             <a (click)="editRaffle(raff)" style="cursor: pointer;">
-                                <i class="material-icons">create</i> Editar
+                                <i class="material-icons" style="padding-bottom: 10px;">create</i> Editar
                             </a>
                         </div>
                     </div>

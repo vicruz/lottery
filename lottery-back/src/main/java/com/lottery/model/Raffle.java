@@ -47,6 +47,9 @@ public class Raffle implements Serializable{
 	@Column(name = "PRODUCT_DESCRIPTION")
 	private String productDescription;
 	
+	@Column(name = "RAFFLE_STATUS")
+	private String raffleStatus;
+	
 	@Column(name = "RAFFLE_IMAGE", length = 100000)
 	private byte[] raffleImage;
 	

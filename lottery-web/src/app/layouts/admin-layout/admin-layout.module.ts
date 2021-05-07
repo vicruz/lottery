@@ -26,6 +26,8 @@ import { ImagedndDirective } from 'app/_directives/imagednd.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
+import {ProgressBarModule} from "angular-progress-bar"
+import { AssignWinnerModalComponent } from 'app/assign-winner-modal/assign-winner-modal.component';
 
 @NgModule({
   imports: [
@@ -44,7 +46,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatNativeDateModule,
     MatTableModule,
     FlexLayoutModule,
-    MatDialogModule
+    MatDialogModule,
+    ProgressBarModule
   ],
   declarations: [
     DashboardComponent,
@@ -57,7 +60,8 @@ import { MatDialogModule } from '@angular/material/dialog';
     UpgradeComponent,
     RafflesComponent,
     RaffleEditComponent,
-    ImagedndDirective
+    ImagedndDirective,
+    AssignWinnerModalComponent
   ]
 })
 

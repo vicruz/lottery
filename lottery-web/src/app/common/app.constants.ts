@@ -13,4 +13,6 @@ export class AppConstants {
     public static FREE = "Libre";
     public static SELLED = "Vendido";
     public static SELECTED = "Apartado";
+    public static ACTIVE = "Activo";
+    public static FINSIH = "Finalizado";
 }

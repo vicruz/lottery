@@ -11,50 +11,10 @@ import { UpgradeComponent } from '../../upgrade/upgrade.component';
 import { RafflesComponent } from 'app/raffles/raffles.component';
 import { UsersPanelComponent } from 'app/users-panel/users-panel.component';
 import { RaffleEditComponent } from 'app/raffle-edit/raffle-edit.component';
+import { AuthGuard } from 'app/auth.guard';
 
 export const AdminLayoutRoutes: Routes = [
-    // {
-    //   path: '',
-    //   children: [ {
-    //     path: 'dashboard',
-    //     component: DashboardComponent
-    // }]}, {
-    // path: '',
-    // children: [ {
-    //   path: 'userprofile',
-    //   component: UserProfileComponent
-    // }]
-    // }, {
-    //   path: '',
-    //   children: [ {
-    //     path: 'icons',
-    //     component: IconsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'notifications',
-    //         component: NotificationsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'maps',
-    //         component: MapsComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'typography',
-    //         component: TypographyComponent
-    //     }]
-    // }, {
-    //     path: '',
-    //     children: [ {
-    //         path: 'upgrade',
-    //         component: UpgradeComponent
-    //     }]
-    // }
+   
     { path: 'dashboard',      component: DashboardComponent },
     { path: 'user-profile',   component: UserProfileComponent },
     { path: 'table-list',     component: TableListComponent },
@@ -64,7 +24,7 @@ export const AdminLayoutRoutes: Routes = [
     { path: 'notifications',  component: NotificationsComponent },
     { path: 'raffles',        component: RafflesComponent },
     { path: 'upgrade',        component: UpgradeComponent },
-    { path: 'users-panel',    component: UsersPanelComponent },
-    { path: 'raffles/edit',   component: RaffleEditComponent },
-    { path: 'raffles/edit/:id',   component: RaffleEditComponent }
+    { path: 'users-panel',    component: UsersPanelComponent, canActivate: [AuthGuard], data:{ roles: ['ROLE_ADMIN']} },
+    { path: 'raffles/edit',   component: RaffleEditComponent, canActivate: [AuthGuard], data:{ roles: ['ROLE_ADMIN']} },
+    { path: 'raffles/edit/:id',   component: RaffleEditComponent, canActivate: [AuthGuard], data:{ roles: ['ROLE_ADMIN']} }
 ];

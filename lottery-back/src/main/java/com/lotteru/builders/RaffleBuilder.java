@@ -22,6 +22,7 @@ public class RaffleBuilder {
 		raffle.setProductDescription(dto.getDescription());
 		raffle.setRafflePercentage(dto.getPercentage());
 		raffle.setContentType(dto.getContentType());
+		raffle.setRaffleStatus(dto.getStatus());
 		
 		return raffle;
 	}
@@ -46,6 +47,7 @@ public class RaffleBuilder {
 		dto.setDescription(raffle.getProductDescription());
 		dto.setPercentage(raffle.getRafflePercentage());
 		dto.setContentType(raffle.getContentType());
+		dto.setStatus(raffle.getRaffleStatus());
 		
 		
 		if(raffle.getRaffleImage()!=null && raffle.getRaffleImage().length > 0) {
