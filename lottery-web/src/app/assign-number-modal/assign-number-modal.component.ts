@@ -1,4 +1,5 @@
 import { Component, Inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { NotificationsComponent } from 'app/notifications/notifications.component';
 import { RaffleNumbers } from 'app/response/raffle-numbers';
@@ -17,9 +18,13 @@ export class AssignNumberModalComponent implements OnInit {
   availableNumbers:RaffleNumbers[];
   numberAssigned:RaffleNumbers;
   notificationComponent:NotificationsComponent;
+  numberForm: FormGroup;
+  amount:number;
+  isSubmited = false;
+  buttonAssigned = false;
 
   constructor(private dialogRef: MatDialogRef<AssignNumberModalComponent>, private raffleService:RaffleService, 
-    private tokenStorage: TokenStorageService, 
+    private formBuilder: FormBuilder,
     @Inject(MAT_DIALOG_DATA) public data) {
     console.log(data.raffleId);
     this.raffleName = data.raffleName;
@@ -29,6 +34,10 @@ export class AssignNumberModalComponent implements OnInit {
     this.numberAssigned = new RaffleNumbers();
     this.numberAssigned.number = -1;
     this.notificationComponent = new NotificationsComponent();
+
+    this.numberForm = this.formBuilder.group({
+      numberSelected: ['', Validators.required]
+    });
    }
 
 
@@ -38,10 +47,23 @@ export class AssignNumberModalComponent implements OnInit {
     });
   }
 
+  public blurNumber($event:any){
+    let value = $event.target.value;
+    this.amount = 0;
+    for(let idx=0; idx<this.availableNumbers.length; idx++){
+      if(this.availableNumbers[idx].number==value){
+        this.amount = this.availableNumbers[idx].amount;
+        this.numberAssigned = this.availableNumbers[idx];
+        break;
+      }
+    }
+  }
+
   public close(){
     this.dialogRef.close();
   }
 
+/*
   public getNumber(){
     let idx = 0;
     if(this.availableNumbers.length > 1){
@@ -53,6 +75,23 @@ export class AssignNumberModalComponent implements OnInit {
     console.log(currentUser);
 
     this.raffleService.assign(this.numberAssigned).subscribe(resp=>{ 
+      this.notificationComponent.showNotificationSuccess('Numero asignado');
+    },
+      err=>{
+        this.notificationComponent.showNotificationDanger('Ocurrio un error al asignar el numero. Vuelva a intentarlo');
+        console.log("valio madres " + err);
+      });
+  }
+*/
+
+  public onSubmit(){
+    this.isSubmited = true;
+    if(this.numberForm.invalid){
+      return;
+    }
+    
+    this.raffleService.assign(this.numberAssigned).subscribe(resp=>{ 
+      this.buttonAssigned = true;
       this.notificationComponent.showNotificationSuccess('Numero asignado');
     },
       err=>{

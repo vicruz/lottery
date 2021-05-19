@@ -36,6 +36,7 @@ export class RaffleEditComponent implements OnInit {
   valueDb:RaffleValues;
   imageShow:any;
   status = AppConstants.ACTIVE;
+  winner:number;
 
   
   @ViewChild('description', {static: true}) descriptionElement: ElementRef;
@@ -89,6 +90,7 @@ export class RaffleEditComponent implements OnInit {
           }
 
           this.status = resp.status;
+          this.winner = resp.winner;
 
           this.collection.slice();
         });
@@ -131,7 +133,7 @@ export class RaffleEditComponent implements OnInit {
       return;
     }
 
-    if(this.files.length == 0){
+    if(this.files.length == 0 && this.imageShow == null){
       this.notificationComponent.showNotificationDanger('Se requiere una imagen para crear el sorteo');
       return;
     }
@@ -144,19 +146,24 @@ export class RaffleEditComponent implements OnInit {
     info.raffleNumbers = this.collection;
     info.description = this.descriptionElement.nativeElement.value;
     info.status = this.status;
+    info.winner = this.winner;
     
     let formData = new FormData();
-    formData.append('image', this.files[0].file, this.files[0].file.name);
     formData.append('dto', JSON.stringify(info));
+    if(this.files.length > 0){
+      formData.append('image', this.files[0].file, this.files[0].file.name);
+    }
 
     if(info.id > 0){
       this.raffleService.update(info).subscribe((resp:RaffleValues)=>{
-        this.raffleService.updateImage(info.id, formData).subscribe(resp=>{
-          this.router.navigate(["raffles"]);
-        },err=>{
-          console.log(err);
-          this.notificationComponent.showNotificationDanger('La imagen no pudo ser actualizada');  
-        });
+        if(this.files.length > 0){
+          this.raffleService.updateImage(info.id, formData).subscribe(resp=>{
+            this.router.navigate(["raffles"]);
+          },err=>{
+            console.log(err);
+            this.notificationComponent.showNotificationDanger('La imagen no pudo ser actualizada');  
+          });
+        }
         this.notificationComponent.showNotificationSuccess('Sorteo actualizado');
       });
     }else{

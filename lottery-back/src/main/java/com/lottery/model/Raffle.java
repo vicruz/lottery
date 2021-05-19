@@ -50,6 +50,9 @@ public class Raffle implements Serializable{
 	@Column(name = "RAFFLE_STATUS")
 	private String raffleStatus;
 	
+	@Column(name = "RAFFLE_WINNER")
+	private Long raffleWinner;
+	
 	@Column(name = "RAFFLE_IMAGE", length = 100000)
 	private byte[] raffleImage;
 	

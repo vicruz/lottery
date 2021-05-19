@@ -23,6 +23,7 @@ public class RaffleBuilder {
 		raffle.setRafflePercentage(dto.getPercentage());
 		raffle.setContentType(dto.getContentType());
 		raffle.setRaffleStatus(dto.getStatus());
+		raffle.setRaffleWinner(dto.getWinner());
 		
 		return raffle;
 	}
@@ -48,6 +49,7 @@ public class RaffleBuilder {
 		dto.setPercentage(raffle.getRafflePercentage());
 		dto.setContentType(raffle.getContentType());
 		dto.setStatus(raffle.getRaffleStatus());
+		dto.setWinner(raffle.getRaffleWinner());
 		
 		
 		if(raffle.getRaffleImage()!=null && raffle.getRaffleImage().length > 0) {
@@ -90,6 +92,7 @@ public class RaffleBuilder {
 		raffle.setRaffleImage(dto.getImage());
 		raffle.setProductDescription(dto.getDescription());
 		raffle.setRafflePercentage(dto.getPercentage());
+		raffle.setRaffleWinner(dto.getWinner());
 		raffle.setRaffleNumbers(RaffleNumberBuilder.dtosToEntities(dto.getRaffleNumbers()));
 		
 		return raffle;

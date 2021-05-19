@@ -57,8 +57,7 @@ import { AssignWinnerModalComponent } from './assign-winner-modal/assign-winner-
     AdminLayoutComponent,
     LoginComponent,
     SignupComponent,
-    UsersPanelComponent,
-    AssignNumberModalComponent
+    UsersPanelComponent
   ],
   providers: [authInterceptorProviders,{ provide: MAT_DATE_LOCALE, useValue: 'en-GB' }],
   bootstrap: [AppComponent]

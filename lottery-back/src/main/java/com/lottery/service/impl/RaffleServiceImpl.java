@@ -12,7 +12,6 @@ import java.util.zip.Deflater;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -102,7 +101,7 @@ public class RaffleServiceImpl implements RaffleService {
 			throw new LotteryException("Usuario inexistente");
 		
 		RaffleNumber raffleNumber = optional.get();
-		raffleNumber.setStatus(RaffleStatus.VENDIDO.getStatus());
+		raffleNumber.setStatus(RaffleStatus.APARTADO.getStatus());
 		raffleNumber.setUser(user);
 		raffleNumberRepository.saveAndFlush(raffleNumber);
 		
@@ -157,7 +156,7 @@ public class RaffleServiceImpl implements RaffleService {
 		Raffle raffle = raffleRepository.getOne(dto.getId());
 		raffle.setRaffleName(dto.getName());
 		raffle.setRaffleDate(dto.getDate());
-		raffle.setRaffleImage(dto.getImage());
+		//raffle.setRaffleImage(dto.getImage());
 		raffle.setProductDescription(dto.getDescription());
 		raffle.setRafflePercentage(dto.getPercentage());
 
@@ -190,7 +189,7 @@ public class RaffleServiceImpl implements RaffleService {
 	}
 
 	@Override
-	public List<RaffleNumberDto> getNumbersByStatus(@PathVariable Long id, String status) {
+	public List<RaffleNumberDto> getNumbersByStatus(Long id, String status) {
 		List<RaffleNumber> lstNumber;
 		
 		lstNumber = raffleNumberRepository.findByIdRaffleIdAndStatus(id, status);
@@ -348,8 +347,27 @@ public class RaffleServiceImpl implements RaffleService {
 	public void updateRaffleStatus(Long raffleId, Long number) {
 		Raffle raffle = raffleRepository.getOne(raffleId);
 		raffle.setRaffleStatus(RaffleStatus.FINALIZADO.getStatus());
+		raffle.setRaffleWinner(number);
+		
+		List<RaffleNumberDto> lst = raffleNumberRepository.getByRaffleId(raffleId);
+		List<String> lstBbc = new ArrayList<>();
+		String mailWinner = "";
+		
+		for(RaffleNumberDto dto: lst) {
+			if(dto.getStatus().equals(RaffleStatus.VENDIDO.getStatus())) {
+				if(dto.getNumber().equals(number)) {
+					mailWinner = dto.getEmail();
+				}else {
+					lstBbc.add(dto.getEmail());
+				}				
+			}
+		}
 		
 		raffleRepository.save(raffle);
+		
+		emailService.sendMessageWinner(mailWinner, "Ganador del sorteo " +  raffle.getRaffleName(), raffle.getRaffleName());
+		emailService.sendMessageFinished("no-reply@lottery.com", "Sorteo " +  raffle.getRaffleName() + " finalizado", 
+				raffle.getRaffleName(), String.join(",", lstBbc));
 	}
 	
 }

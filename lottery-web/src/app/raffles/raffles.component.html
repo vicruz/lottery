@@ -41,7 +41,9 @@
                         <h4 class="card-title">{{raff.name}}</h4>
                         <p class="card-category">
                             <span class="text-success">   {{raff.selledPercentage}}%   </span> 
-                            <span style="text-align: right;">   Inicio: {{raff.date}}  </span> 
+                            <span *ngIf="raff.status=='Activo'" style="text-align: right; padding-left: 54%;">   Inicio: {{raff.date}}  </span> 
+                            <span *ngIf="raff.status!='Activo'" style="text-align: right; padding-left: 68%;">   Ganador: {{raff.winner}}  </span> 
+                            
                         </p>
                         
                     </div>

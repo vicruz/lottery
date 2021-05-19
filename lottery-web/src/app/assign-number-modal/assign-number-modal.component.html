@@ -6,32 +6,33 @@
     <div class="card-body">
         <div *ngIf="!availableNumbers.length">No hay numeros disponibles</div>
         <div *ngIf="availableNumbers.length">
-            <form>
-                <div class="row" *ngIf="numberAssigned.number==-1">
-                    <button mat-raised-button class="btn btn-info pull-center" (click)="getNumber()" >Obtener numero</button>
+            <form [formGroup]="numberForm" (ngSubmit)="onSubmit()" novalidate>
+                <div class="row">
+                    <span [ngClass]="{ 'has-error': isSubmited && numberForm.controls['numberSelected'].invalid }">
+                        <mat-form-field class="example-full-width col-md-12" >
+                            <input matInput formControlName="numberSelected" placeholder="Selecciona tu número" 
+                                type="number" min="0" max="99" maxlength="2" style="text-align: right;" (change)="blurNumber($event)">
+                        </mat-form-field>
+                    </span>
+                    <span>
+                        <div *ngIf="isSubmited && numberForm.controls['numberSelected'].errors" class="help-block">
+                            <div *ngIf="numberForm.controls['numberSelected'].errors.required" class="">Numero requerido</div>
+                        </div>
+                    </span>
+                </div>
+                <div class="row">
+                    <div *ngIf="amount>0" style="padding-top: 12px;">
+                        <label>Costo: ${{amount}} </label>
+                    </div>
+                    <div *ngIf="amount==0" style="padding-top: 12px;">
+                        <label>EL número no esta disponible </label>
+                    </div>
                 </div>
 
-                <div class="row" *ngIf="numberAssigned.number==-1" style="padding-top: 20px;padding-bottom: 20px;">
-                    <h4 class="card-title">Numero al azar</h4>
-                </div>
-                
-
-                <div class="row" *ngIf="numberAssigned.number>-1" style="padding-top: 20px;">
-                    <h4 class="card-title">Numero asignado: {{numberAssigned.number}}</h4>
-                </div>
-                <div class="row" *ngIf="numberAssigned.number>-1" >
-                    <p class="card-description">
-                        Monto a pagar: ${{numberAssigned.amount}}
-                    </p>
-                </div>
-                <div class="row" *ngIf="numberAssigned.number>-1" style="padding-bottom: 20px;">
-                    <p class="card-description">
-                        Se ha enviado un correo con las instrucciones de pago
-                    </p>
-                </div>        
+                <button *ngIf="!buttonAssigned" mat-raised-button type="submit" class="btn btn-info pull-right" >Apartar número</button>
+                <button mat-raised-button class="btn btn-danger pull-right" type="button" (click)="close()">Cerrar</button>
             </form>
             <div class="clearfix"></div>
         </div>
-        <button mat-raised-button class="btn btn-danger pull-right" (click)="close()">Cerrar</button>
     </div>
 </div>

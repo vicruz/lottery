@@ -28,6 +28,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MatDialogModule } from '@angular/material/dialog';
 import {ProgressBarModule} from "angular-progress-bar"
 import { AssignWinnerModalComponent } from 'app/assign-winner-modal/assign-winner-modal.component';
+import { AssignNumberModalComponent } from 'app/assign-number-modal/assign-number-modal.component';
 
 @NgModule({
   imports: [
@@ -61,7 +62,8 @@ import { AssignWinnerModalComponent } from 'app/assign-winner-modal/assign-winne
     RafflesComponent,
     RaffleEditComponent,
     ImagedndDirective,
-    AssignWinnerModalComponent
+    AssignWinnerModalComponent,
+    AssignNumberModalComponent
   ]
 })
 

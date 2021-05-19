@@ -34,8 +34,7 @@ public class EmailSenderImpl implements EmailService {
 	@Override
 	public void sendMessageWinner(String to, String subject, String sorteo) {
 		String text = "Felicidades!!!! Le informamos que ha sigo el ganador del sorteo " + sorteo + ". ";
-		sendSimpleMessage(to, subject, text);
-		
+		sendSimpleMessage(to, subject, text);	
 	}
 	
 	public void sendSimpleMessage(String to, String subject, String text, String ...bbc) {

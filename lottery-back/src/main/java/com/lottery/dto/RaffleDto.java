@@ -32,6 +32,7 @@ public class RaffleDto implements Serializable {
 	private Long freePercentage;
 	private Long selectedPercentage;
 	private String status;
+	private Long winner;
 	private List<RaffleNumberDto> raffleNumbers;
 
 	public RaffleDto(Long id, String name, Date date, Double percentage, String description, byte[] image, Long selledPercentage) {
