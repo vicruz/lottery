@@ -4,11 +4,14 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.zip.Deflater;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -105,8 +108,8 @@ public class RaffleServiceImpl implements RaffleService {
 		raffleNumber.setUser(user);
 		raffleNumberRepository.saveAndFlush(raffleNumber);
 		
-		emailService.sendMessage(user.getEmail(), "Sorteo " + raffle.getRaffleName(), user.getDisplayName(), 
-				raffle.getRaffleDate().toString(),""+number, ""+raffleNumber.getAmount());
+		emailService.sendMimeMessageJoinRaffle(user.getEmail(), "Sorteo " + raffle.getRaffleName(), user.getDisplayName(), 
+				raffle.getRaffleName(), number.intValue(), ""+raffleNumber.getAmount());
 	}
 
 	@Override
@@ -350,7 +353,7 @@ public class RaffleServiceImpl implements RaffleService {
 		raffle.setRaffleWinner(number);
 		
 		List<RaffleNumberDto> lst = raffleNumberRepository.getByRaffleId(raffleId);
-		List<String> lstBbc = new ArrayList<>();
+		Set<String> lstBbc = new HashSet<>();
 		String mailWinner = "";
 		
 		for(RaffleNumberDto dto: lst) {
@@ -363,11 +366,22 @@ public class RaffleServiceImpl implements RaffleService {
 			}
 		}
 		
-		raffleRepository.save(raffle);
+		//remove mailWinner from list (this is when winner buys more than 1 number)
+		lstBbc.remove(mailWinner);
+		lstBbc.remove(Strings.EMPTY);
 		
+		raffleRepository.save(raffle);
+		/*
 		emailService.sendMessageWinner(mailWinner, "Ganador del sorteo " +  raffle.getRaffleName(), raffle.getRaffleName());
 		emailService.sendMessageFinished("no-reply@lottery.com", "Sorteo " +  raffle.getRaffleName() + " finalizado", 
 				raffle.getRaffleName(), String.join(",", lstBbc));
+		*/
+		String arr[] = new String[lstBbc.size()];
+		lstBbc.toArray(arr);
+		emailService.sendMimeMessageWinner(mailWinner, "Ganador del sorteo " +  raffle.getRaffleName(), raffle.getRaffleName());
+		if(!lstBbc.isEmpty())
+			emailService.sendMimeMessageFinished("no-reply@lottery.com", "Sorteo " +  raffle.getRaffleName() + " finalizado", 
+					raffle.getRaffleName(), arr);
 	}
 	
 }
