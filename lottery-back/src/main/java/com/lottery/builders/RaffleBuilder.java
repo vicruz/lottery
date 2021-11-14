@@ -1,4 +1,4 @@
-package com.lotteru.builders;
+package com.lottery.builders;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;

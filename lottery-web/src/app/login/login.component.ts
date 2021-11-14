@@ -5,6 +5,9 @@ import { AuthService } from 'app/_services/auth.service';
 import { TokenStorageService } from 'app/_services/token-storage.service';
 import { UserService } from 'app/_services/user.service';
 
+//Configurar rewrite
+//http://codedumpster.nithinbiliya.com/deep-linking-issue-angular-application-tomcat-server/
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

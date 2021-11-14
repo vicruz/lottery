@@ -1,4 +1,4 @@
-package com.lotteru.builders;
+package com.lottery.builders;
 
 import java.util.ArrayList;
 import java.util.List;

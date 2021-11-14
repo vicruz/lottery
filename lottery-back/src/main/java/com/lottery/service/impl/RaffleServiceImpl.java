@@ -18,8 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.lotteru.builders.RaffleBuilder;
-import com.lotteru.builders.RaffleNumberBuilder;
+import com.lottery.builders.RaffleBuilder;
+import com.lottery.builders.RaffleNumberBuilder;
 import com.lottery.dto.RaffleDto;
 import com.lottery.dto.RaffleNumberDto;
 import com.lottery.enums.RaffleStatus;
